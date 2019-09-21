@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
+}
+
+group 'diansa'
+version '1.0.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    def joglVersion = '2.3.2'
+    def joglNatives = ['natives-windows-amd64']
+    implementation group: 'com.googlecode.soundlibs', name: 'mp3spi', version: '1.9.5.4'
+    implementation group: 'org.jogamp.gluegen', name: 'gluegen-rt', version: joglVersion
+    implementation group: 'org.jogamp.jogl', name: 'jogl-all', version: joglVersion
+    for (joglNative in joglNatives) {
+        runtimeOnly group: 'org.jogamp.gluegen', name: 'gluegen-rt', version: joglVersion, classifier: joglNative
+        runtimeOnly group: 'org.jogamp.jogl', name: 'jogl-all', version: joglVersion, classifier: joglNative
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'diansa.dw.Game'
+    }
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
