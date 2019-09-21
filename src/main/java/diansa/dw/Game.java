@@ -155,7 +155,6 @@ public class Game implements Runnable, EventListener {
 
     @Override
     public void run() {
-        /*
         long now = System.nanoTime();
         delta += (now - lastTime) / ns;
         lastTime = now;
@@ -164,8 +163,6 @@ public class Game implements Runnable, EventListener {
             updates++;
             delta -= 1;
         }
-        */
-        update();
         render();
         frames++;
         if (System.currentTimeMillis() - fpsTimer > 1000) {
