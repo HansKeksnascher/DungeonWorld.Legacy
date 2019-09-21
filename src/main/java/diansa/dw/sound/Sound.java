@@ -18,7 +18,7 @@ public class Sound {
 
     public Sound(String soundFile) {
         try {
-            AudioInputStream baseStream = AudioSystem.getAudioInputStream(this.getClass().getClassLoader().getResourceAsStream(soundFile));
+            AudioInputStream baseStream = AudioSystem.getAudioInputStream(this.getClass().getClassLoader().getResource(soundFile));
             AudioFormat baseFormat = baseStream.getFormat();
             AudioFormat decodeFormat = new AudioFormat(
                     AudioFormat.Encoding.PCM_SIGNED,
