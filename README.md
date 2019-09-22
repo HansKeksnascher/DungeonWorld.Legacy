@@ -1,8 +1,11 @@
-# DungeonWorld: 2D-RPG
+# DungeonWorld Legacy: 2D-RPG
+
+**This project runs currently only on Java 8.**
 
 This is an old project and served the purpose of learning Java. Nothing special.
 
 ## Controls:
+
 | KEY         | Action        |
 | :---------: | :-----------: |
 | W         | Move up     |
@@ -20,4 +23,5 @@ to sell items: press E in front of a vendor, open inventory(B) and right click o
 
 LMB = left mouse button
           
-You can't die in this version.
+You can die in this version.
+
