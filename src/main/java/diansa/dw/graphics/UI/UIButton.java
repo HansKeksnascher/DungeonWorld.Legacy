@@ -1,5 +1,6 @@
 package diansa.dw.graphics.UI;
 
+import com.jogamp.newt.event.MouseEvent;
 import diansa.dw.input.Mouse;
 import diansa.dw.util.Vector2i;
 
@@ -7,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 public class UIButton extends UIComponent {
@@ -62,7 +62,7 @@ public class UIButton extends UIComponent {
     }
 
     public void setText(String text) {
-        if (text == "") {
+        if (text.equals("")) {
             label.active = false;
         } else {
             label.text = text;
@@ -74,14 +74,12 @@ public class UIButton extends UIComponent {
         if (rect.contains(new Point(Mouse.getX(), Mouse.getY()))) {
             if (!inside) {
                 buttonListener.entered(this);
-
             }
             inside = true;
-
             if (!pressed && Mouse.getButton() == MouseEvent.BUTTON1) {
                 buttonListener.pressed(this);
                 pressed = true;
-            } else if (pressed && Mouse.getButton() == MouseEvent.NOBUTTON) {
+            } else if (pressed && Mouse.getButton() == -1) {
                 buttonListener.released(this);
                 actionListener.perform();
                 pressed = false;

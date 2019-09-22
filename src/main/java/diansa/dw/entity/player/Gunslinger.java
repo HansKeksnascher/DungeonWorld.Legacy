@@ -1,5 +1,6 @@
 package diansa.dw.entity.player;
 
+import com.jogamp.newt.event.MouseEvent;
 import diansa.dw.Game;
 import diansa.dw.entity.item.Item.ItemRarity;
 import diansa.dw.entity.item.KeyItem;
@@ -16,8 +17,6 @@ import diansa.dw.graphics.SpriteSheet;
 import diansa.dw.graphics.playerUI.inventory.Inventory;
 import diansa.dw.input.Keyboard;
 import diansa.dw.input.Mouse;
-
-import java.awt.event.MouseEvent;
 
 public class Gunslinger extends Player implements EventListener {
 

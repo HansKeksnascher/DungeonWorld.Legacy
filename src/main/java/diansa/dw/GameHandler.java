@@ -113,7 +113,7 @@ public class GameHandler implements GLEventListener {
         gl.glClearColor(1f, 0f, 0f, 1f);
         gl.glEnable(GL3.GL_BLEND);
         gl.glBlendFunc(GL3.GL_SRC_ALPHA, GL3.GL_ONE_MINUS_SRC_ALPHA);
-        gl.setSwapInterval(0);
+        gl.setSwapInterval(1);
     }
 
     @Override

@@ -1,8 +1,12 @@
 package diansa.dw;
 
+import com.jogamp.nativewindow.WindowClosingProtocol;
+import com.jogamp.nativewindow.util.DimensionImmutable;
+import com.jogamp.newt.event.WindowAdapter;
+import com.jogamp.newt.event.WindowEvent;
+import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
-import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 import diansa.dw.entity.player.Gunslinger;
 import diansa.dw.entity.player.Player;
@@ -20,9 +24,7 @@ import diansa.dw.input.Mouse;
 import diansa.dw.level.Level;
 import diansa.dw.sound.Sound;
 
-import javax.swing.JFrame;
 import java.awt.Graphics2D;
-import java.awt.Panel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +35,6 @@ public class Game implements Runnable, EventListener {
     public static int height = 300; /// 300
     public static int scale = 2;
 
-    private JFrame frame;
     private Screen screen;
     public static Keyboard keyInput;
     public Mouse mouseInput;
@@ -42,7 +43,6 @@ public class Game implements Runnable, EventListener {
     private Level level;
     private Player player;
     private MiniMap miniMap;
-    private int[] pixels;
 
     private static UIManager uiManager;
     public static Sound[] sounds = new Sound[10];
@@ -52,8 +52,6 @@ public class Game implements Runnable, EventListener {
     private List<Layer> layerStack = new ArrayList<Layer>();
 
     public static StateManager sm = new StateManager();
-    private GLCanvas canvas = null;
-    private Panel panel = new Panel();
     private FPSAnimator animator = null;
 
     private long lastTime = System.nanoTime();
@@ -63,10 +61,11 @@ public class Game implements Runnable, EventListener {
     private int updates = 0;
     private long fpsTimer = System.currentTimeMillis();
 
+    private GLWindow window;
+
     public Game() {
         loadSounds();
         screen = new Screen(width, height);
-        frame = new JFrame();
         keyInput = new Keyboard();
         mouseInput = new Mouse(this);
         uiManager = new UIManager();
@@ -206,22 +205,21 @@ public class Game implements Runnable, EventListener {
         GLProfile profile = GLProfile.getGL2GL3();
         GLCapabilities capabilities = new GLCapabilities(profile);
         capabilities.setDoubleBuffered(true);
-        canvas = new GLCanvas(capabilities);
-        canvas.setSize(getWindowWidth(), getWindowHeight());
-        panel.setSize(getWindowWidth(), getWindowHeight());
-        canvas.addGLEventListener(new GameHandler(this));
-        animator = new FPSAnimator(canvas, 60);
-        frame.getContentPane().add(canvas);
-        frame.setSize(canvas.getSize());
-        frame.setResizable(false);
-        frame.setTitle("DungeonWorld");
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        canvas.addKeyListener(keyInput);
-        canvas.addMouseListener(mouseInput);
-        canvas.addMouseMotionListener(mouseInput);
+        window = GLWindow.create(capabilities);
+        window.setSize(getWindowWidth(), getWindowHeight());
+        window.setTitle("Dungeon World Legacy");
+        window.setDefaultCloseOperation(WindowClosingProtocol.WindowClosingMode.DISPOSE_ON_CLOSE);
+        window.setVisible(true);
+        window.setResizable(false);
+        window.addKeyListener(keyInput);
+        window.addMouseListener(mouseInput);
+        DimensionImmutable resolution = window.getScreen().getPrimaryMonitor().getCurrentMode().getSurfaceSize().getResolution();
+        window.setPosition((resolution.getWidth() - getWindowWidth()) / 2, (resolution.getHeight() - getWindowHeight()) / 2);
+        animator = new FPSAnimator(window, 60, true);
+        window.addGLEventListener(new GameHandler(this));
+        window.setWindowDestroyNotifyAction(() -> {
+            stop();
+        });
     }
 
     public Screen getScreen() {
@@ -229,9 +227,6 @@ public class Game implements Runnable, EventListener {
     }
 
     public static void main(String[] args) {
-        System.setProperty("sun.java2d.opengl", "false");
-        System.setProperty("sun.java2d.noddraw", "true");
-        System.setProperty("sun.awt.noerasebackground", "true");
         Game game = new Game();
         game.initGL();
         game.start();

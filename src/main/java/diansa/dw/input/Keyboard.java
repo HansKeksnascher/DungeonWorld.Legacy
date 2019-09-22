@@ -1,7 +1,7 @@
 package diansa.dw.input;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import com.jogamp.newt.event.KeyEvent;
+import com.jogamp.newt.event.KeyListener;
 
 public class Keyboard implements KeyListener {
 
@@ -25,10 +25,9 @@ public class Keyboard implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+        if (e.isAutoRepeat()) {
+            return;
+        }
         keys[e.getKeyCode()] = false;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
     }
 }
